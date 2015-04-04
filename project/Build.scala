@@ -1,12 +1,9 @@
 import sbt._
 import sbt.Keys._
-//import sbtassembly.Plugin._
-//import AssemblyKeys._
-//import sbtrelease.ReleasePlugin._
 
-object ScalanStartRootBuild extends Build {
+object Build extends Build {
   val commonDeps = libraryDependencies ++= Seq(
-    "org.scalaz.stream" %% "scalaz-stream" % "0.6a",
+    //"org.scalaz.stream" %% "scalaz-stream" % "0.6a",
     //"junit" % "junit" % "4.11" % "test",
     //("com.novocode" % "junit-interface" % "0.11" % "test").exclude("junit", "junit-dep").exclude("org.scala-tools.testing", "test-interface"),
     "org.scalatest" %% "scalatest" % "2.2.1" % "test",
@@ -44,7 +41,7 @@ object ScalanStartRootBuild extends Build {
   lazy val commonSettings =
     buildSettings /*++ assemblySettings ++ releaseSettings*/ ++ testSettings ++
       Seq(
-      resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
+      //resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
       publishTo := {
         val nexus = "http://10.122.85.37:9081/nexus/"
         if (version.value.trim.endsWith("SNAPSHOT"))
@@ -61,21 +58,24 @@ object ScalanStartRootBuild extends Build {
       p.configs(ItTest).settings(commonSettings: _*)
   }
 
-  def liteProject(name: String) = ProjectRef(file("../scalan-lite"), name)
+  def liteProject(name: String) = ProjectRef(file("../scalan-ce"), name)
 
   def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.7-SNAPSHOT"
 
   lazy val metaDeps = liteDependency("meta")
-  lazy val startermeta = Project(
+  lazy val meta = Project(
     id = "starter-meta",
     base = file("meta")).addTestConfigsAndCommonSettings.
     settings(libraryDependencies ++= Seq(metaDeps))
 
   lazy val core = liteDependency("core")
-  lazy val start = Project(
+  lazy val common = liteDependency("common")
+  lazy val community = liteDependency("community-edition")
+  lazy val ml_study = Project(
     id = "scalan-starter",
     base = file(".")).addTestConfigsAndCommonSettings.
-    settings(libraryDependencies ++= Seq(core, core % "test" classifier "tests"))
+    settings(libraryDependencies ++= Seq(core, common, common % "test" classifier "tests",
+                                         community, core % "test" classifier "tests"))
 
   def itFilter(name: String): Boolean =
     name endsWith "ItTests"
