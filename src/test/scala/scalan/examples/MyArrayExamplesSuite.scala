@@ -2,7 +2,7 @@ package scalan.examples
 
 import java.io.File
 import java.lang.reflect.Method
-import scalan.compilation.GraphVizExport
+import scalan.compilation.{GraphVizConfig, GraphVizExport}
 import scalan.{BaseShouldTests, ScalanCtxExp, ScalanCtxSeq}
 
 /**
@@ -13,27 +13,28 @@ class MyArrayExamplesSuite extends BaseShouldTests {
   val testFolder = "test-out/scalan/myarrays/"
 
   "when mixing trait" should "be constructed in Seq context" in {
-      val ctx = new ScalanCtxSeq with MyArraysDslSeq with MyArrayExamples {}
+      val ctx = new ScalanCtxSeq with ExampleDslSeq with MyArrayExamples {}
   }
   
   it should "be constructed in Staged context" in {
-    val ctx = new ScalanCtxExp with MyArraysDslExp with MyArrayExamples {}
+    val ctx = new ScalanCtxExp with ExampleDslExp with MyArrayExamples {}
   }
 
   "in seq context" should "execute functions" in {
-    val ctx = new ScalanCtxSeq with MyArraysDslSeq with MyArrayExamples {}
+    val ctx = new ScalanCtxSeq with ExampleDslSeq with MyArrayExamples {}
     val in = Array((1,2f), (3,4f), (5,6f))
     val res = ctx.fromAndTo(in)
+    println(res.toList)
     res should be(in)
   }
 
   def testMethod(name: String) = {
-    val ctx = new ScalanCtxExp with MyArraysDslExp with MyArrayExamples with GraphVizExport {
+    val ctx = new ScalanCtxExp with ExampleDslExp with MyArrayExamples with GraphVizExport {
       // invoke all domain methods if possible
       override def isInvokeEnabled(d: Def[_], m: Method) = true
     }
     val f = ctx.getStagedFunc(name)
-    ctx.emitDepGraph(f, new File(s"$testFolder/$name.dot"), false)
+    ctx.emitDepGraph(f, new File(s"$testFolder/$name.dot")/*, false*/)(GraphVizConfig.default)
   }
 
   val whenStaged = "when staged"
