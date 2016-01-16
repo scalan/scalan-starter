@@ -7,17 +7,17 @@ object StarterBoilerplateTool extends BoilerplateTool {
   )
   lazy val starterConfig = CodegenConfig(
     name = "ml",
-    srcPath = "src/main/scala",
+    srcPath = "scalan-starter-core/src/main/scala",
     entityFiles = List(
       "scalan/examples/MyArrays.scala"
     ),
-    baseContextTrait = "Scalan",
-    seqContextTrait = "ScalanSeq",
-    stagedContextTrait = "ScalanExp",
+//    baseContextTrait = "Scalan",
+//    seqContextTrait = "ScalanSeq",
+//    stagedContextTrait = "ScalanExp",
     extraImports = List(
       "scala.reflect.runtime.universe._",
       "scalan.common.Default"),
-    starterTypeSynonims
+    entityTypeSynonyms = starterTypeSynonims
   )
 
   override def getConfigs(args: Array[String]) = Seq(starterConfig)

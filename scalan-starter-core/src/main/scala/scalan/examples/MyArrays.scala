@@ -14,7 +14,7 @@ trait MyArrays { self: ExampleDsl =>
   /**
    * User defined type
    */
-  trait MyArray[A] extends Reifiable[MyArray[A]] {
+  trait MyArray[A] extends Def[MyArray[A]] {
     implicit def elem: Elem[A]
     def length: Rep[Int]
     def values: Rep[Collection[A]]
@@ -47,23 +47,10 @@ trait MyArrays { self: ExampleDsl =>
    */
   trait MyArrayCompanion extends TypeFamily1[MyArray] {
     /**
-     * Specify how to construct default values of this type family
-     * @param ea descriptor of MyArray elements
-     * @tparam A type of MyArray elements
-     * @return instance of Default type class
-     */
-    def defaultOf[A](implicit ea: Elem[A]): Default[Rep[MyArray[A]]] = ea match {
-      //case UnitElement => Default.defaultVal(UnitMyArray(0).asRep[MyArray[A]])
-      case baseE: BaseElem[a] => BaseMyArray.defaultOf[a](baseE)
-      case pairE: PairElem[a, b] => PairMyArray.defaultOf[a, b](pairE.eFst, pairE.eSnd)
-      case e => ???(s"Element is $e")
-    }
-
-    /**
      * Constructs MyArray from Collection and can be invoked using companion like this
      * val my = MyArray(arr)
      * @param arr
-     * @tparam T
+     * @tparam A
      * @return
      */
     def apply[A: Elem](arr: Rep[Collection[A]]): MyArr[A] = fromArray(arr)
@@ -72,7 +59,7 @@ trait MyArrays { self: ExampleDsl =>
      * Construct MyArray in a generic way using type descriptor of its elements.
      * This funtions takes input array and puts it into different structures depending on element type.
      * @param arr input array
-     * @tparam T type of array elements
+     * @tparam A type of array elements
      * @return
      */
     def fromArray[A: Elem](arr: Rep[Collection[A]]): MyArr[A] = {
@@ -96,7 +83,7 @@ trait MyArrays { self: ExampleDsl =>
      * Another example of MyArray constructor. Uses core Collection primitives.
      * @param len number of elements in the new MyArray
      * @param v   value to put into each element of MyArray
-     * @tparam T
+     * @tparam A
      * @return
      */
     def replicate[A: Elem](len: Rep[Int], v: Rep[A]): MyArr[A] = {
@@ -118,14 +105,6 @@ trait MyArrays { self: ExampleDsl =>
     }
   }
 
-  /*abstract class UnitMyArray(val length: Rep[Int])
-    extends MyArray[Unit] {
-    def elem = UnitElement
-    def values = Collection.replicate(length, ())
-    //def length = len
-    def apply(i: Rep[Int]) = ()
-  }*/
-
   abstract class BaseMyArray[A](val values: Rep[Collection[A]])(implicit val eA: Elem[A])
     extends MyArray[A] {
     def elem = eA
@@ -137,31 +116,16 @@ trait MyArrays { self: ExampleDsl =>
     extends MyArray[(A, B)] {
     lazy val elem = element[(A, B)]
     def arr = as.arr zip bs.arr
-    //val as: Rep[MyArray[A]], val bs: Rep[MyArray[B]]
     def as: Rep[Collection[A]] = values.convertTo[PairCollection[A, B]].as
     def bs: Rep[Collection[B]] = values.convertTo[PairCollection[A, B]].bs
-    def apply(i: Rep[Int]) = values(i)//(as(i), bs(i))
+    def apply(i: Rep[Int]) = values(i)
     def length = as.length
   }
 
-  /*trait UnitMyArrayCompanion extends ConcreteClass0[UnitMyArray] {
-    def defaultOf = Default.defaultVal(UnitMyArray(0))
-  }*/
-
   trait BaseMyArrayCompanion extends ConcreteClass1[BaseMyArray] {
-    def defaultOf[A](implicit ea: Elem[A]) = BaseMyArray.defaultOf[A]
-      //Default.defaultVal(BaseMyArray(Default.defaultOf[Rep[Collection[A]]]))
-    //def defaultOf[A: Elem] = DenseVector.defaultOf[A]
   }
 
   trait PairMyArrayCompanion extends ConcreteClass2[PairMyArray] with MyArrayCompanion {
-    def defaultOf[A, B](implicit ea: Elem[A], eb: Elem[B]) = {
-      //val as = Collection.defaultOf[A].value
-      //val bs = Collection.defaultOf[B].value
-      //Default.defaultVal(PairMyArray((as zip bs).convertTo[Collection[(A, B)]]))
-      //Default.defaultVal(PairMyArray(element[Collection[(A, B)]].defaultRepValue))
-      Default.defaultVal(PairMyArray(Collection(SArray.empty[(A,B)])))
-    }
     def apply[A, B](as: Rep[MyArray[A]], bs: Rep[MyArray[B]])(implicit ea: Elem[A], eb: Elem[B]): PairMyArray[A, B] = {
       PairMyArray((as.values zip bs.values).convertTo[Collection[(A, B)]])
     }
@@ -170,6 +134,6 @@ trait MyArrays { self: ExampleDsl =>
 
 trait MyArraysDsl extends impl.MyArraysAbs with MyArrays { self: ExampleDsl => }
 
-trait MyArraysDslSeq extends MyArraysDsl with impl.MyArraysSeq with ScalanSeq { self: ExampleDslSeq => }
+trait MyArraysDslSeq extends impl.MyArraysSeq with MyArraysDsl{ self: ExampleDslSeq => }
 
-trait MyArraysDslExp extends MyArraysDsl with impl.MyArraysExp with ScalanExp { self: ExampleDslExp => }
+trait MyArraysDslExp extends impl.MyArraysExp with MyArraysDsl { self: ExampleDslExp => }
