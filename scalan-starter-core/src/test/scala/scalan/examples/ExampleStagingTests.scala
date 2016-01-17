@@ -7,36 +7,35 @@ import scalan.compilation.{StructsCompiler, DummyCompiler}
 import scalan.it.BaseItTests
 import scalan.linalgebra.{MatricesDslExp, MatricesDsl, LinearAlgebraExamples}
 
+class ScalanCake extends ScalanDslExp
+  with ExampleDslExp with LinearAlgebraExamples with MatricesDslExp {
+  override val cacheElems = false
+}
 
 class ExampleStagingTests extends BaseViewTests {
 
   class Ctx extends TestCompilerContext {
-
-    class ScalanCake extends ScalanDslExp
-      with ExampleDslExp with LinearAlgebraExamples with MatricesDslExp {
-      override val cacheElems = false
-
-      def noTuples[A, B](f: Rep[A => B]): Boolean = {
-        val g = new PGraph(f)
-        !g.scheduleAll.exists(tp => tp.rhs match {
-          case First(_) => true
-          case Second(_) => true
-          case Tup(_, _) => true
-          case _ => false
-        })
-      }
-
-      def testFlattening[T](e: Elem[T], expected: Elem[_]) = {
-        val iso = getFlatteningIso(e)
-        val eFrom = iso.eFrom
-        assertResult(expected)(eFrom)
-        iso
-      }
-
-    }
-
     override val compiler = new DummyCompiler(new ScalanCake)
       with StructsCompiler[ScalanCake]
+    import compiler.scalan._
+
+    def noTuples[A, B](f: Rep[A => B]): Boolean = {
+      val g = new PGraph(f)
+      !g.scheduleAll.exists(tp => tp.rhs match {
+        case First(_) => true
+        case Second(_) => true
+        case Tup(_, _) => true
+        case _ => false
+      })
+    }
+
+    def testFlattening[T](e: Elem[T], expected: Elem[_]) = {
+      val iso = getFlatteningIso(e)
+      val eFrom = iso.eFrom
+      assertResult(expected)(eFrom)
+      iso
+    }
+
   }
 
   test("staging") {
