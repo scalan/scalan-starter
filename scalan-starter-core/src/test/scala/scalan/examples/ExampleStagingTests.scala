@@ -1,64 +1,32 @@
 package scalan.examples
 
 import scala.language.reflectiveCalls
-import scalan._
-import scalan.common.{SegmentsDslSeq, SegmentsDsl, SegmentsDslExp, Lazy}
-import scalan.compilation.{StructsCompiler, DummyCompiler}
-import scalan.it.BaseItTests
-import scalan.linalgebra.{MatricesDslExp, MatricesDsl, LinearAlgebraExamples}
-
-class ScalanCake extends ScalanDslExp
-  with ExampleDslExp with LinearAlgebraExamples with MatricesDslExp {
-  override val cacheElems = false
-}
+import scalan.BaseViewTests
 
 class ExampleStagingTests extends BaseViewTests {
 
-  class Ctx extends TestCompilerContext {
-    override val compiler = new DummyCompiler(new ScalanCake)
-      with StructsCompiler[ScalanCake]
-    import compiler.scalan._
-
-    def noTuples[A, B](f: Rep[A => B]): Boolean = {
-      val g = new PGraph(f)
-      !g.scheduleAll.exists(tp => tp.rhs match {
-        case First(_) => true
-        case Second(_) => true
-        case Tup(_, _) => true
-        case _ => false
-      })
+  test("matrix_convertion") {
+    import java.lang.reflect.Method
+    import scalan._
+    import scalan.collections._
+    import scalan.linalgebra._
+    var doInvoke = true
+    class Ctx extends MatricesDslExp { override def isInvokeEnabled(d: Def[_], m: Method) = doInvoke }
+    val ctx = new Ctx
+    import ctx._
+    val sparse2dense = fun { v: Rep[SparseVector[Double]] =>
+      DenseVector(v.items)
     }
-
-    def testFlattening[T](e: Elem[T], expected: Elem[_]) = {
-      val iso = getFlatteningIso(e)
-      val eFrom = iso.eFrom
-      assertResult(expected)(eFrom)
-      iso
+    def sparseData2denseData = fun { data: Rep[SparseVectorData[Double]] =>
+      val v = SparseVector(data)
+      DenseVector(v.items).toData
     }
-
+    stage(ctx)(currentTestName, "sparse2dense", Seq(() => sparse2dense))
+//    doInvoke = false
+//    stage(ctx)(currentTestName, "sparseData2denseDataNoInvoke", Seq(() => sparseData2denseData))
+    doInvoke = true
+    stage(ctx)(currentTestName, "sparseData2denseData", Seq(() => sparseData2denseData))
+//    showGraphs(sparse2dense)
   }
 
-  test("staging") {
-    val ctx = new Ctx {
-    }
-    import ctx.compiler.scalan._
-    ctx.test("aamvm", aamvm)
-  }
-
-  test("structWrapper") {
-    val ctx = new Ctx {
-
-      import compiler.scalan._
-
-      def testWrapper[A, B](functionName: String,
-                            f: => Exp[A => B], expectTuples: Boolean = false): compiler.CompilerOutput[A, B] = {
-        val out = super.test(functionName, f)
-        val hasTuples = !noTuples(out.common.graph.roots(0).asRep[A => B])
-        assert(expectTuples && hasTuples || (!expectTuples && !hasTuples))
-        out
-      }
-    }
-    import ctx.compiler.scalan._
-    ctx.testWrapper("aamvm", structWrapper(aamvm))
-  }
 }
