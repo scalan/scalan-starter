@@ -11,7 +11,7 @@ class ExampleStagingTests extends BaseViewTests {
   test("c1") {
     import scalan._
     import scalan.linalgebra._
-    class Ctx extends MatricesDslExp { override def invokeAll = true }
+    class Ctx extends LADslExp { override def invokeAll = true }
     val ctx = new Ctx
     import ctx._
     val sparse2dense = fun { v: Rep[SparseVector[Double]] =>
@@ -24,7 +24,7 @@ class ExampleStagingTests extends BaseViewTests {
     import scalan._
     import scalan.linalgebra._
     var doInvoke = true
-    class Ctx extends MatricesDslExp { override def invokeAll = false }
+    class Ctx extends LADslExp { override def invokeAll = false }
     val ctx = new Ctx
     import ctx._
     def sparseData2denseData = fun { data: Rep[SparseVectorData[Double]] =>
@@ -38,7 +38,7 @@ class ExampleStagingTests extends BaseViewTests {
     import scalan._
     import scalan.linalgebra._
     var doInvoke = true
-    class Ctx extends MatricesDslExp { override def invokeAll = true }
+    class Ctx extends LADslExp { override def invokeAll = true }
     val ctx = new Ctx
     import ctx._
     def sparseData2denseData = fun { data: Rep[SparseVectorData[Double]] =>
@@ -51,7 +51,7 @@ class ExampleStagingTests extends BaseViewTests {
   test("c4") {
     import scalan._
     import scalan.linalgebra._
-    class Ctx extends MatricesDslExp { override def invokeAll = true }
+    class Ctx extends LADslExp { override def invokeAll = true }
     val ctx = new Ctx
     import ctx._
     val vector2dense = fun { v: Rep[Vector[Double]] =>
@@ -72,7 +72,7 @@ class ExampleStagingTests extends BaseViewTests {
   test("c5") {
     import scalan._
     import scalan.linalgebra._
-    class Ctx extends MatricesDslExp { override def invokeAll = true }
+    class Ctx extends LADslExp { override def invokeAll = true }
     val ctx = new Ctx
     import ctx._
     val Some(c) = hasConverter(element[Array[SparseVector[Double]]], element[Array[DenseVector[Double]]])
@@ -88,7 +88,7 @@ class ExampleStagingTests extends BaseViewTests {
     import scalan._
     import scalan.linalgebra._
     var doInvoke = true
-    class Ctx extends MatricesDslExp { override def invokeAll = doInvoke }
+    class Ctx extends LADslExp { override def invokeAll = doInvoke }
     val ctx = new Ctx
     import ctx._
 

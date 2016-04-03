@@ -2,12 +2,7 @@ package scalan.examples
 
 import scala.language.reflectiveCalls
 import scalan._
-import scalan.common.{SegmentsDslStd, SegmentsDsl, SegmentsDslExp, Lazy}
-import scalan.compilation.{StructsCompiler, DummyCompiler}
-import scalan.it.BaseItTests
-import scalan.linalgebra.{MatricesDslExp, MatricesDsl, LinearAlgebraExamples}
-
-
+import scalan.compilation.{DummyCompiler, StructsCompiler}
 
 class ExampleCompilerTests extends BaseViewTests {
 
