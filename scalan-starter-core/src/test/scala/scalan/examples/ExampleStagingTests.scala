@@ -83,4 +83,55 @@ class ExampleStagingTests extends BaseViewTests {
     stage(ctx)(currentTestName, "hasConverter_sparse_dense",
                Seq(() => sparseData2denseData))
   }
+
+  test("isoSpec1") {
+    import scalan._
+    import scalan.linalgebra._
+    var doInvoke = true
+    class Ctx extends MatricesDslExp { override def invokeAll = doInvoke }
+    val ctx = new Ctx
+    import ctx._
+
+    lazy val mvm = fun { p: Rep[(Matrix[Double], Vector[Double])] =>
+      val Pair(m, v) = p
+      DenseVector(m.rows.mapBy( fun{ r => r dot v }))
+    }
+    stage(ctx)(currentTestName, "mvm",
+      Seq(() => mvm))
+
+    lazy val ddmvmC = fun { p: Rep[(Collection[Collection[Double]], Collection[Double])] =>
+      val Pair(m, v) = p
+      val width = m(0).length
+      val matrix: Matr[Double] = CompoundMatrix(m.map { r: Coll[Double] => DenseVector(r) }, width)
+      val vector: Vec[Double] = DenseVector(v)
+      mvm(matrix, vector).items
+    }
+    stage(ctx)(currentTestName, "ddmvmC",
+      Seq(() => ddmvmC))
+
+    def ddmvmA = fun { p: Rep[(Array[Array[Double]], Array[Double])] =>
+      val Pair(m, v) = p
+      val matrix = CollectionOverArray(m.map(r => CollectionOverArray(r)))
+      val vector = CollectionOverArray(v)
+      ddmvmC(matrix, vector).arr
+    }
+    doInvoke = false
+    stage(ctx)(currentTestName, "ddmvmA_noinvoke",
+      Seq(() => ddmvmA))
+    doInvoke = true
+    stage(ctx)(currentTestName, "ddmvmA_invoke",
+      Seq(() => ddmvmA))
+
+    def ddmvmL = fun { p: Rep[(List[List[Double]], List[Double])] =>
+      val Pair(m, v) = p
+      val matrix = CollectionOverList(m.map(r => CollectionOverList(r)))
+      val vector = CollectionOverList(v)
+      ddmvmC(matrix, vector).arr
+    }
+    doInvoke = true
+    stage(ctx)(currentTestName, "ddmvmL_invoke",
+      Seq(() => ddmvmL))
+
+  }
+
 }
