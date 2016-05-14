@@ -1,9 +1,9 @@
-package scalan.examples
+package scalan
 
-import scalan.ScalanDslExp
 import scalan.linalgebra.{LADslExp, LinearAlgebraExamples}
 
 class ScalanCake extends ScalanDslExp
-  with ExampleDslExp with LinearAlgebraExamples with LADslExp {
+  with LinearAlgebraExamples with LADslExp {
   override val cacheElems = false
+  implicit val config = defaultGraphVizConfig
 }
