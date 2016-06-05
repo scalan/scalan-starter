@@ -2,10 +2,7 @@ package scalan.examples
 
 import scalan.ScalanDslExp
 
-// TODO [Graphviz] output `new MyClass` instead of `MyClassExp`
-// TODO [Graphviz] output lambda symbol
-
-object Tutorial {
+object Idioms {
 
   object Snippet1 {
     import scalan._
