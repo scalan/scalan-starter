@@ -1,7 +1,7 @@
 package scalan.examples
 
 import scalan._
-import scalan.compilation.{KernelTypes, KernelStore}
+import scalan.compilation.{KernelStore, KernelTypes}
 
 /**
   * Example code that can be executed both in standard evaluation

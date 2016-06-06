@@ -1,8 +1,6 @@
 package scalan.examples
 
-import scala.reflect.ClassTag
 import scalan._
-import scalan.compilation.{KernelTypes, KernelStore}
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
 trait Example3 extends Scalan with LADsl with LAUtils  {

@@ -62,7 +62,7 @@ object Build extends Build {
   lazy val scalanCore        = scalanDependency("scalan-core")
   lazy val scalanCollections = scalanDependency("scalan-collections")
   lazy val scalanLA = scalanDependency("scalan-linear-algebra")
-  lazy val scalanLms         = scalanDependency("scalan-lms-backend-core")
+//  lazy val scalanLms         = scalanDependency("scalan-lms-backend-core")
 
   lazy val meta = Project(
     id = "scalan-starter-meta",
@@ -81,20 +81,24 @@ object Build extends Build {
 
   val virtScala = Option(System.getenv("SCALA_VIRTUALIZED_VERSION")).getOrElse("2.11.2")
 
-  lazy val lmsBackend = Project(
-    id = "scalan-starter-lms-backend",
-    base = file("lms-backend")).addTestConfigsAndCommonSettings.
-    settings(libraryDependencies ++= Seq(scalanLms),
-      scalaOrganization := "org.scala-lang.virtualized",
-      scalaVersion := virtScala
-    )
+//  lazy val lmsBackend = Project(
+//    id = "scalan-starter-lms-backend",
+//    base = file("lms-backend")).addTestConfigsAndCommonSettings.
+//    settings(libraryDependencies ++= Seq(scalanLms),
+//      scalaOrganization := "org.scala-lang.virtualized",
+//      scalaVersion := virtScala
+//    )
 
   lazy val root = Project(
     id = "scalan-starter",
     base = file(".")).addTestConfigsAndCommonSettings
-    .aggregate(meta, core, lmsBackend)
+    .aggregate(meta, core)
     .settings(
-      libraryDependencies ++= Seq(scalanCore, scalanCore % "test" classifier "tests"),
+      libraryDependencies ++= Seq(
+        scalanCore, scalanCore % "test" classifier "tests",
+        scalanCollections, scalanCollections % "test" classifier "tests",
+        scalanLA, scalanLA % "test" classifier "tests"
+        ),
       publishArtifact := false)
 
   def itFilter(name: String): Boolean =

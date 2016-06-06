@@ -256,7 +256,7 @@ object Idioms {
     class Ctx extends ScalanCake with LADslExp { override def invokeAll = true }
     val ctx = new Ctx
     import ctx._
-    val Some(c) = hasConverter(element[Array[SparseVector[Double]]], element[Array[DenseVector[Double]]])
+    val Some(c) = getConverter(element[Array[SparseVector[Double]]], element[Array[DenseVector[Double]]])
     val sparseData2denseData = fun { data: Rep[Array[SparseVectorData[Double]]] =>
       val vs = data.map(SparseVector(_))
       c(vs).map(_.toData)
