@@ -1,7 +1,7 @@
 package scalan.examples
 
 import scalan._
-import scalan.compilation.{KernelStore, KernelTypes}
+import scalan.compilation.{KernelType, KernelStore}
 
 /**
   * Example code that can be executed both in standard evaluation
@@ -42,11 +42,11 @@ object DemoExp extends App {
 
 object KernelsDemo {
   val ctx = new ExampleExp
-  val scalaStore = KernelStore.open(ctx, KernelTypes.ScalaKernel)
+  val scalaStore = KernelStore.open(ctx, KernelType.Scala)
   val plusS = scalaStore.createKernel("plus", scalaStore.scalan.plusFun)
   val resS = plusS((10, 20))
 
-  val cppStore = KernelStore.open(ctx, KernelTypes.CppKernel)
+  val cppStore = KernelStore.open(ctx, KernelType.Cpp)
   val plusCp = cppStore.createKernel("plus", cppStore.scalan.plusFun)
   val resC = plusCp((10, 20))
   assert(resS == resC)

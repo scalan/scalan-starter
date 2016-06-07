@@ -1,7 +1,7 @@
 package scalan.examples
 
 import scalan._
-import scalan.compilation.{KernelStore, KernelTypes}
+import scalan.compilation.{KernelType, KernelStore}
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
 trait Example2 extends Scalan with LADsl with LAUtils {
@@ -55,11 +55,11 @@ class Example2Exp extends LADslExp with Example2 {
 }
 
 object Demo2Exp extends Example2Exp with App {
-  mvm.show
-  dmdvC.show
-  dmdvA.show
+//  mvm.show
+//  dmdvC.show
+//  dmdvA.show
 
-  val kstore = KernelStore.open(this, KernelTypes.ScalaKernel)
+  val kstore = KernelStore.open(this, KernelType.Scala)
 
   val dmdvA_k = kstore.createKernel("dmdvA", dmdvA)
 
