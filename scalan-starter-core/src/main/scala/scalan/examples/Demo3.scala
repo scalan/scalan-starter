@@ -1,6 +1,9 @@
 package scalan.examples
 
+import java.io.File
+
 import scalan._
+import scalan.compilation.{KernelStore, KernelType}
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
 trait Example3 extends Scalan with LADsl with LAUtils  {
@@ -29,8 +32,9 @@ trait Example3 extends Scalan with LADsl with LAUtils  {
 
 class Example3Std extends LADslStd with Example3
 
-object Demo3Std extends Example3Std with App {
-
+object Demo3Std extends App {
+  val ctx = new Example3Std
+  import ctx._
   val res = smdvA((smData, dvData))
 
   printColumn("sm", smData._1)
@@ -59,19 +63,21 @@ class Example3Exp extends LADslExp with Example3 {
   }
 }
 
-object Demo3Exp extends Example3Exp with App {
-  mvm.show
-  sparse2dense.show
-  smdvA.show
-//
-//  val kstore = KernelStore.open(this, KernelTypes.ScalaKernel)
-//  import kstore.scalan._
-//
-//  val dmdvA_k = kstore.createKernel("dmdvA", dmdvA)
-//
-//  val res = dmdvA_k((dmData, dvData))
-//
-//  print("m", dmData)
-//  printColumn("v", dvData)
-//  printColumn("r", res)
+object Demo3Exp extends App {
+  val ctx = new Example3Exp
+  import ctx._
+//  mvm.show
+//  sparse2dense.show
+//  smdvA.show
+
+  val kernelsDir = new File("./test-out/Demo3Exp")
+  val kstore = KernelStore.open(ctx, kernelsDir)
+
+  val smdvA_k = kstore.createKernel("smdvA", KernelType.Scala, smdvA)
+
+  val res = smdvA_k((smData, dvData))
+
+  printColumn("m", smData._1)
+  printColumn("v", dvData)
+  printColumn("r", res)
 }

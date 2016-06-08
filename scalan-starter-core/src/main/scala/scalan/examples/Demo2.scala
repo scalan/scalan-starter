@@ -1,7 +1,9 @@
 package scalan.examples
 
-import scalan._
-import scalan.compilation.{KernelType, KernelStore}
+import java.io.File
+
+import scalan.Scalan
+import scalan.compilation.{KernelStore, KernelType}
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
 trait Example2 extends Scalan with LADsl with LAUtils {
@@ -40,8 +42,9 @@ trait Example2 extends Scalan with LADsl with LAUtils {
 
 class Example2Std extends LADslStd with Example2
 
-object Demo2Std extends Example2Std with App {
-
+object Demo2Std extends App {
+  val ctx = new Example2Std
+  import ctx._
   val res = dmdvA((dmData, dvData))
 
   print("m", dmData)
@@ -54,18 +57,23 @@ class Example2Exp extends LADslExp with Example2 {
   override def invokeAll = doInvoke
 }
 
-object Demo2Exp extends Example2Exp with App {
-//  mvm.show
-//  dmdvC.show
-//  dmdvA.show
+object Demo2Exp {
+  def main(args: Array[String]): Unit = {
+    val ctx = new Example2Exp
+    import ctx._
+    //  mvm.show
+    //  dmdvC.show
+    //  dmdvA.show
 
-  val kstore = KernelStore.open(this, KernelType.Scala)
+    val kernelsDir = new File("./test-out/Demo2Exp")
+    val kstore = KernelStore.open(ctx, kernelsDir)
 
-  val dmdvA_k = kstore.createKernel("dmdvA", dmdvA)
+    val dmdvA_k = kstore.createKernel("dmdvA", KernelType.Scala, dmdvA)
 
-  val res = dmdvA_k((dmData, dvData))
+    val res = dmdvA_k((dmData, dvData))
 
-  print("m", dmData)
-  printColumn("v", dvData)
-  printColumn("r", res)
+    print("m", dmData)
+    printColumn("v", dvData)
+    printColumn("r", res)
+  }
 }

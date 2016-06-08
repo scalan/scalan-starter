@@ -3,10 +3,15 @@ package scalan.examples
 import scala.reflect.ClassTag
 
 trait LAUtils {
+  def print[T](x: T): String = x match {
+    case p: Product => p.productIterator.map(print(_)).mkString("(", ",", ")")
+    case a: Array[_] => a.mkString("[", ",", "]")
+    case _ => x.toString
+  }
   def print[T](name: String, m: Array[Array[T]]): Unit = {
     val nameLine = m.length / 2
     val res = m.zipWithIndex.map { case (row, i) => {
-        row.mkString(if (i == nameLine) s"$name:\t" else "\t", "\t", "\t")
+        row.map(print(_)).mkString(if (i == nameLine) s"$name:\t" else "\t", "\t", "\t")
       }
     }.mkString("\n")
     println(res)
