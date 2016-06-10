@@ -13,8 +13,10 @@ trait Example3 extends Scalan with LADsl with Helpers  {
     DenseVector(m.rows.map { r => r dot v })
   }
 
-  val Some(sparse2dense) = getConverter(element[SparseMatrix[Double]], element[DenseMatrix[Double]])
-  val conv = pairConv(sparse2dense, identityConv[Vector[Double]])
+  val Some(conv) = getConverter(
+    element[(SparseMatrix[Double],Vector[Double])],
+    element[(DenseMatrix[Double], Vector[Double])])
+//  val conv = pairConv(sparse2dense, identityConv[Vector[Double]])
 //  val Some(vec2array) = getConverter(element[Vector[Double]], element[Array[Double]])
 
   lazy val smdvA = fun { p: Rep[((Array[(Array[Int],Array[Double])], Int), Array[Double])] =>
@@ -44,7 +46,7 @@ object Demo3Std extends App {
   printColumn("dr", res)
 }
 
-class Example3Exp extends LADslExp with Example3 {
+class Example3Exp extends LADslExp with JNIExtractorOpsExp with Example3 {
   var doInvoke = true
   override def invokeAll = doInvoke
   override def rewriteDef[T](d: Def[T]) = d match {
@@ -75,11 +77,14 @@ object Demo3Exp extends App {
   val kernelsDir = new File("./test-out/Demo3Exp")
   val kstore = KernelStore.open(ctx, kernelsDir)
 
-  val smdvA_k = kstore.createKernel("smdvA", KernelType.Scala, smdvA)
+  val smdvA_s = kstore.createKernel("smdvA", KernelType.Scala, smdvA)
+  val smdvA_c = kstore.createKernel("smdvA", KernelType.Cpp, smdvA)
 
-  val res = smdvA_k((smData, dvData))
+  val resS = smdvA_s((smData, dvData))
+  val resC = smdvA_c((smData, dvData))
 
   printColumn("m", smData._1)
   printColumn("v", dvData)
-  printColumn("r", res)
+  printColumn("rS", resS)
+  printColumn("rC", resC)
 }
