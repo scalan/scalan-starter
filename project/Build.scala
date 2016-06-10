@@ -73,6 +73,7 @@ object Build extends Build {
     id = "scalan-starter-core",
     base = file("scalan-starter-core")).addTestConfigsAndCommonSettings.
     settings(libraryDependencies ++= Seq(
+      "com.github.kxbmap" %% "configs-java7" % "0.3.0",
       scalanCommon, scalanCommon % "test" classifier "tests",
       scalanCore, scalanCore % "test" classifier "tests",
       scalanCollections, scalanCollections % "test" classifier "tests",

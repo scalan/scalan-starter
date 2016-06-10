@@ -6,7 +6,7 @@ import scalan.Scalan
 import scalan.compilation.{KernelStore, KernelType}
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
-trait Example2 extends Scalan with LADsl with LAUtils {
+trait Example2 extends Scalan with LADsl with Helpers {
 
   lazy val mvm = fun { p: Rep[(Matrix[Double], Vector[Double])] =>
     val Pair(m, v) = p

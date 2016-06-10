@@ -6,7 +6,7 @@ import scalan._
 import scalan.compilation.{KernelStore, KernelType}
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
-trait Example3 extends Scalan with LADsl with LAUtils  {
+trait Example3 extends Scalan with LADsl with Helpers  {
 
   lazy val mvm = fun { p: Rep[(Matrix[Double], Vector[Double])] =>
     val Pair(m, v) = p
@@ -14,12 +14,14 @@ trait Example3 extends Scalan with LADsl with LAUtils  {
   }
 
   val Some(sparse2dense) = getConverter(element[SparseMatrix[Double]], element[DenseMatrix[Double]])
+  val conv = pairConv(sparse2dense, identityConv[Vector[Double]])
+//  val Some(vec2array) = getConverter(element[Vector[Double]], element[Array[Double]])
 
   lazy val smdvA = fun { p: Rep[((Array[(Array[Int],Array[Double])], Int), Array[Double])] =>
     val Pair(Pair(m_data, nCols), v_data) = p
-    val m = sparse2dense(SparseMatrix(m_data, nCols))
-    val v = DenseVector(v_data)
-    mvm((m, v)).items.arr
+    val sm = SparseMatrix(m_data, nCols)
+    val dv = DenseVector(v_data)
+    (conv >> (mvm)).apply(sm, dv).items.arr
   }
 
   val smData = (Array(
