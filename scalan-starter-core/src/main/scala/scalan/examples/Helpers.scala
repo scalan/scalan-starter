@@ -1,6 +1,7 @@
 package scalan.examples
 
 import scala.reflect.ClassTag
+import scala.util.Random
 import scalan.Scalan
 
 trait Helpers { scalan: Scalan =>
@@ -21,7 +22,23 @@ trait Helpers { scalan: Scalan =>
   def printRow[T:ClassTag](name: String, v: Array[T]): Unit = print(name, Array(v))
   def printColumn[T:ClassTag](name: String, v: Array[T]): Unit = print(name, v.map(Array(_)))
 
-  implicit class LambdaOpsForConv[A:Elem,B:Elem](f: Rep[A => B]) {
-    def asConv: Conv[A,B] = baseConv(f)
+  val rnd = new Random(1)
+
+  def genArray(len: Int): Array[Double] = {
+    { for (i <- 1 to len) yield { rnd.nextDouble() } }.toArray
   }
+
+  def genMatr(rows: Int, cols: Int): Array[Array[Double]] = {
+    { for (i <- 1 to rows) yield { genArray(cols) } }.toArray
+  }
+
+  def time[A](name: String)(block: => A) = {
+    val start = System.nanoTime()
+    val result = block
+    val end = System.nanoTime()
+    val t = (end - start).toDouble
+    println(s"$name (${t / 1e9} s)")
+    (result, t)
+  }
+
 }
