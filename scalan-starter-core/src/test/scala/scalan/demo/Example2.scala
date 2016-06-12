@@ -33,11 +33,6 @@ trait Example2 extends Scalan with LADsl with Helpers {
     Array(0, 1.0, 0),
     Array(1.0, 0, 1.0)
   )
-  val smData = Array(
-    Array((0,1.0), (2,1.0)),
-    Array((1,1.0)),
-    Array((0,1.0), (2, 1.0))
-  )
   val dvData = Array(1.0,2.0,3.0)
 }
 

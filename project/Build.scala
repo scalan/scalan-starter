@@ -17,7 +17,7 @@ object Build extends Build {
 
   val buildSettings = Seq(
     organization := "com.huawei.scalan",
-    scalaVersion := "2.11.7",
+    scalaVersion := "2.11.8",
     scalacOptions ++= Seq(
       "-unchecked", "-deprecation",
       "-feature",
