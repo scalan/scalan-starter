@@ -61,6 +61,7 @@ object Build extends Build {
   lazy val scalanCommon      = scalanDependency("scalan-common")
   lazy val scalanCore        = scalanDependency("scalan-core")
   lazy val scalanCollections = scalanDependency("scalan-collections")
+  lazy val scalanEffects     = scalanDependency("scalan-effects")
   lazy val scalanLA = scalanDependency("scalan-linear-algebra")
 //  lazy val scalanLms         = scalanDependency("scalan-lms-backend-core")
 
@@ -78,6 +79,7 @@ object Build extends Build {
       scalanCommon, scalanCommon % "test" classifier "tests",
       scalanCore, scalanCore % "test" classifier "tests",
       scalanCollections, scalanCollections % "test" classifier "tests",
+      scalanEffects, scalanEffects % "test" classifier "tests",
       scalanLA, scalanLA % "test" classifier "tests"
     ))
 
