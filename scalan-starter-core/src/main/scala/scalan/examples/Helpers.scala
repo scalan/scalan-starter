@@ -37,7 +37,7 @@ trait Helpers { scalan: Scalan =>
     val result = block
     val end = System.nanoTime()
     val t = (end - start).toDouble
-    println(s"$name (${t / 1e9} s)")
+    println(s"$name (${(t / 1e6)} ms)")
     (result, t)
   }
 
