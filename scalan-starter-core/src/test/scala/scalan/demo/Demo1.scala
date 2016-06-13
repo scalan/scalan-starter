@@ -35,7 +35,7 @@ class Demo1 extends BaseNestedTests {
       }
       val resS       = plusS(data)
 
-      val (plusC,_)  = time ("Generating Scala kernel") {
+      val (plusC,_)  = time ("Generating C++ kernel") {
         store.createKernel("plus", KernelType.Cpp, ctx.plusFun)
       }
       val resC       = plusC(data)
