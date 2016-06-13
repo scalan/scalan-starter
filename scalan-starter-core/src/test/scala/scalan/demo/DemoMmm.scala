@@ -1,9 +1,9 @@
 package scalan.demo
 
 import java.io.File
-
 import scalan.BaseNestedTests
 import scalan.compilation.{KernelStore, KernelType}
+import scalan.examples.Helpers._
 
 class DemoMmm extends BaseNestedTests {
 

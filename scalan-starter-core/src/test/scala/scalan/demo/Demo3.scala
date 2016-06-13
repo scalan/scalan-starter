@@ -3,6 +3,7 @@ package scalan.demo
 import java.io.File
 import scalan.{BaseNestedTests}
 import scalan.compilation.{KernelStore, KernelType}
+import scalan.examples.Helpers._
 
 class Demo3 extends BaseNestedTests {
 

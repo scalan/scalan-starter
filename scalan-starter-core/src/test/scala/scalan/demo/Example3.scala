@@ -1,10 +1,10 @@
 package scalan.demo
 
 import scalan.{Scalan, JNIExtractorOpsExp}
-import scalan.examples.Helpers
+import scalan.examples.Helpers._
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
-trait Example3 extends Scalan with LADsl with Helpers  {
+trait Example3 extends Scalan with LADsl {
 
   lazy val mvm = fun { p: Rep[(Matrix[Double], Vector[Double])] =>
     val Pair(m, v) = p

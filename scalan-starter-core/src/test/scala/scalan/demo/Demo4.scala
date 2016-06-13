@@ -4,6 +4,7 @@ import java.io.File
 
 import scalan.BaseNestedTests
 import scalan.compilation.{KernelStore, KernelType}
+import scalan.examples.Helpers._
 
 class Demo4 extends BaseNestedTests {
   val env = (0,"abc")

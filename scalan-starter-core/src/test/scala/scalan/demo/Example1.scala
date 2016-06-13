@@ -1,16 +1,15 @@
 package scalan.demo
 
 import java.io.File
-
 import scalan.{ScalanDslExp, JNIExtractorOpsExp, ScalanDslStd, Scalan}
 import scalan.compilation.{KernelStore, KernelType}
 import scalan.linalgebra.LADslExp
 
 /**
   * Example code that can be executed both in standard evaluation
-  * and staged evaluation contexts
+  * and staged evaluation contexts.
   */
-trait Example extends Scalan {
+trait Example extends Scalan { // abstract context
   lazy val x: Rep[Int] = 10
   lazy val y = x + 1
   val plus = { in: Rep[(Int, Int)] =>

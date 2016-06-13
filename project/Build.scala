@@ -53,8 +53,6 @@ object Build extends Build {
       p.configs(ItTest).settings(commonSettings: _*)
   }
 
-  def liteProject(name: String) = ProjectRef(file("../scalan-ce"), name)
-
   def scalanDependency(name: String) = "com.huawei.scalan" %% name % "0.3.0-SNAPSHOT"
 
   lazy val scalanMeta        = scalanDependency("scalan-meta")
@@ -63,7 +61,6 @@ object Build extends Build {
   lazy val scalanCollections = scalanDependency("scalan-collections")
   lazy val scalanEffects     = scalanDependency("scalan-effects")
   lazy val scalanLA = scalanDependency("scalan-linear-algebra")
-//  lazy val scalanLms         = scalanDependency("scalan-lms-backend-core")
 
   lazy val meta = Project(
     id = "scalan-starter-meta",
@@ -82,16 +79,6 @@ object Build extends Build {
       scalanEffects, scalanEffects % "test" classifier "tests",
       scalanLA, scalanLA % "test" classifier "tests"
     ))
-
-  val virtScala = Option(System.getenv("SCALA_VIRTUALIZED_VERSION")).getOrElse("2.11.2")
-
-//  lazy val lmsBackend = Project(
-//    id = "scalan-starter-lms-backend",
-//    base = file("lms-backend")).addTestConfigsAndCommonSettings.
-//    settings(libraryDependencies ++= Seq(scalanLms),
-//      scalaOrganization := "org.scala-lang.virtualized",
-//      scalaVersion := virtScala
-//    )
 
   lazy val root = Project(
     id = "scalan-starter",

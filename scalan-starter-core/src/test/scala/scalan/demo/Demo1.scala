@@ -4,33 +4,44 @@ import java.io.File
 
 import scalan.{BaseNestedTests, JNIExtractorOpsExp}
 import scalan.compilation.{KernelStore, KernelType}
+import scalan.examples.Helpers._
 import scalan.linalgebra.LADslExp
 
 class Demo1 extends BaseNestedTests {
 
-  describe("Matrix Vector multiplication (mvm)") {
-    it("Standard evaluation") {
+  describe("Code Virtualization") {
+
+    val ctxStd = new ExampleStd
+    it("supports Standard Evaluation") {
       // create standard evaluation context
-      val ctx = new ExampleStd
-      ctx.run
+      ctxStd.run
     }
 
-    it("Staged evaluation") {
+    it("supports Staged Evaluation") {
       // create staged evaluation context
       val ctxExp = new ExampleExp
       ctxExp.run
     }
 
-    it("Kernels Demo") {
-      val ctx        = new ExampleExp with LADslExp with JNIExtractorOpsExp
-      val kernelsDir = new File("./test-out/KernelsDemo")
+    it("compiles kernels equivalent to standard evaluation") {
+      val ctx        = new ExampleExp with JNIExtractorOpsExp
+      val kernelsDir = new File("./test-out/Demo1")
       val store      = KernelStore.open(ctx, kernelsDir)
-      val plusS      = store.createKernel("plus", KernelType.Scala, ctx.plusFun)
-      val resS       = plusS((10, 20))
+      val data       = (ctxStd.x, ctxStd.y)
+      val resStd     = ctxStd.plusFun(data)
 
-      val plusCp = store.createKernel("plus", KernelType.Cpp, ctx.plusFun)
-      val resC = plusCp((10, 20))
-      assert(resS == resC)
+      val (plusS,_)  = time ("Generating Scala kernel") {
+        store.createKernel("plus", KernelType.Scala, ctx.plusFun)
+      }
+      val resS       = plusS(data)
+
+      val (plusC,_)  = time ("Generating Scala kernel") {
+        store.createKernel("plus", KernelType.Cpp, ctx.plusFun)
+      }
+      val resC       = plusC(data)
+
+      assertResult(resStd)(resS)
+      assertResult(resStd)(resC)
     }
   }
 

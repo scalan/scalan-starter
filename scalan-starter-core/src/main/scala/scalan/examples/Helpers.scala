@@ -4,7 +4,7 @@ import scala.reflect.ClassTag
 import scala.util.Random
 import scalan.Scalan
 
-trait Helpers { scalan: Scalan =>
+object Helpers { //scalan: Scalan =>
   def print[T](x: T): String = x match {
     case p: Product => p.productIterator.map(print(_)).mkString("(", ",", ")")
     case a: Array[_] => a.mkString("[", ",", "]")

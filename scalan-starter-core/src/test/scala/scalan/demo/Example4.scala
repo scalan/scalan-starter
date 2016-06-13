@@ -4,10 +4,10 @@ import java.io.File
 
 import scalan.{JNIExtractorOpsExp, Scalan}
 import scalan.compilation.{KernelStore, KernelType}
-import scalan.examples.Helpers
+import scalan.examples.Helpers._
 import scalan.monads.{MonadsDsl, MonadsDslStd, MonadsDslExp}
 
-trait Example4 extends Scalan with MonadsDsl with Helpers {
+trait Example4 extends Scalan with MonadsDsl {
   def sum[F[_]:Cont]
          (F: Monad[F])(n: Rep[Int])
          (f: Rep[F[Int]] => Rep[Int]): Rep[Int] = {
