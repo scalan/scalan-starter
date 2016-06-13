@@ -4,6 +4,7 @@
 # Scalan specific
 test-out
 it-out
+scalan-runtime
 
 # sbt specific
 .cache/
