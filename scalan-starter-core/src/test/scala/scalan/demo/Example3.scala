@@ -14,14 +14,16 @@ trait Example3 extends Scalan with LADsl {
   val Some(conv) = getConverter(
     element[(SparseMatrix[Double],Vector[Double])],
     element[(DenseMatrix[Double], Vector[Double])])
+
+//  val Some(sparse2dense) = getConverter(
+//    element[SparseMatrix[Double]], element[DenseMatrix[Double]])
 //  val conv = pairConv(sparse2dense, identityConv[Vector[Double]])
-//  val Some(vec2array) = getConverter(element[Vector[Double]], element[Array[Double]])
 
   lazy val smdvA = fun { p: Rep[((Array[(Array[Int],Array[Double])], Int), Array[Double])] =>
     val Pair(Pair(m_data, nCols), v_data) = p
     val sm = SparseMatrix(m_data, nCols)
     val dv = DenseVector(v_data)
-    (conv >> (mvm)).apply(sm, dv).items.arr
+    (conv >> mvm).apply(sm, dv).items.arr
   }
 
   val smData = (Array(
@@ -41,11 +43,10 @@ class Example3Exp extends LADslExp with JNIExtractorOpsExp with Example3 {
     case ArrayMap(ys @ Def(d2), f: RFunc[a, b]@unchecked) =>
       d2.asDef[Array[a]] match {
         case ArrayMap(xs: Rep[Array[c]]@unchecked, g) => //TODO if hasSingleUsage(ys)
-          val xs1 = xs.asRep[Array[c]]
           val g1 = g.asRep[c => a]
           implicit val eB = f.elem.eRange
           implicit val eC = xs.elem.eItem
-          val res = xs1.map { x => f(g1(x))}
+          val res = xs.map { x => f(g1(x))}
           res
         case _ =>
           super.rewriteDef(d)

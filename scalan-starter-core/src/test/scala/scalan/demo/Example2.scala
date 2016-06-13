@@ -1,13 +1,12 @@
 package scalan.demo
 
 import java.io.File
-
 import scalan.{Scalan, JNIExtractorOpsExp}
 import scalan.compilation.{KernelStore, KernelType}
 import scalan.examples.Helpers._
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
-trait Example2 extends Scalan with LADsl {
+trait Example2 extends Scalan with LADsl { // abstract context
 
   lazy val mvm = fun { p: Rep[(Matrix[Double], Vector[Double])] =>
     val Pair(m, v) = p
@@ -23,7 +22,7 @@ trait Example2 extends Scalan with LADsl {
 
   lazy val dmdvA = fun { p: Rep[(Array[Array[Double]], Array[Double])] =>
     val Pair(m_data, v_data) = p
-    val m = CompoundCollection(m_data)
+    val m = JuggedCollection(m_data)
     val v = Collection(v_data)
     dmdvC((m, v)).arr
   }

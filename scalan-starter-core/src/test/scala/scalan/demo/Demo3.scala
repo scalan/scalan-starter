@@ -8,9 +8,10 @@ import scalan.examples.Helpers._
 class Demo3 extends BaseNestedTests {
 
   describe("Composition of Converter with mvm") {
+    val ctxStd = new Example3Std
+
     it("Standard evaluation") {
-      val ctx = new Example3Std
-      import ctx._
+      import ctxStd._
       val res = smdvA((smData, dvData))
 
       printColumn("sm", smData._1)
@@ -22,7 +23,7 @@ class Demo3 extends BaseNestedTests {
       val ctx = new Example3Exp
       import ctx._
 
-      val kernelsDir = new File("./test-out/Demo3Exp")
+      val kernelsDir = new File("./test-out/Demo3")
       val kstore = KernelStore.open(ctx, kernelsDir)
 
       val smdvA_s = kstore.createKernel("smdvA", KernelType.Scala, smdvA)
@@ -36,6 +37,5 @@ class Demo3 extends BaseNestedTests {
       printColumn("rS", resS)
       printColumn("rC", resC)
     }
-
   }
 }

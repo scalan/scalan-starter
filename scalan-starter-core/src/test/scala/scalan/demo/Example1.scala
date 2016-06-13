@@ -1,9 +1,6 @@
 package scalan.demo
 
-import java.io.File
-import scalan.{ScalanDslExp, JNIExtractorOpsExp, ScalanDslStd, Scalan}
-import scalan.compilation.{KernelStore, KernelType}
-import scalan.linalgebra.LADslExp
+import scalan.{ScalanDslExp, ScalanDslStd, Scalan}
 
 /**
   * Example code that can be executed both in standard evaluation

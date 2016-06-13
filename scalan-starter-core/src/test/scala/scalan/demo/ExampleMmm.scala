@@ -3,8 +3,6 @@ package scalan.demo
 import java.io.File
 
 import scalan.{Scalan, JNIExtractorOpsExp}
-import scalan.compilation.{KernelStore, KernelType}
-import scalan.examples.Helpers._
 import scalan.linalgebra.{LADslExp, LADslStd, LADsl}
 
 trait ExampleMmm extends Scalan with LADsl {
@@ -24,8 +22,8 @@ trait ExampleMmm extends Scalan with LADsl {
 
   lazy val dmdmA = fun { in: Rep[(Array[Array[Double]], Array[Array[Double]])] =>
     val Pair(a_data, bT_data) = in
-    val a = DenseMatrix(CompoundCollection(a_data))
-    val bT = DenseMatrix(CompoundCollection(bT_data))
+    val a = DenseMatrix(JuggedCollection(a_data))
+    val bT = DenseMatrix(JuggedCollection(bT_data))
     mmm((a, bT)).toNColl.arr.map(_.arr)
   }
 
