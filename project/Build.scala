@@ -78,7 +78,7 @@ object Build extends Build {
       scalanCollections, scalanCollections % "test" classifier "tests",
       scalanEffects, scalanEffects % "test" classifier "tests",
       scalanLA, scalanLA % "test" classifier "tests"
-    ))
+    ), fork := true)
 
   lazy val root = Project(
     id = "scalan-starter",
