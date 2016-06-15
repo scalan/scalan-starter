@@ -17,7 +17,7 @@ object Build extends Build {
       scalaVersion := "2.11.8",
       scalacOptions ++= Seq(
         "-unchecked", "-deprecation", "-feature",
-        "-language:higherKinds", "-language.existentials"
+        "-language:higherKinds", "-language:existentials"
       )
     ) ++ testSettings /*++ assemblySettings */
 
