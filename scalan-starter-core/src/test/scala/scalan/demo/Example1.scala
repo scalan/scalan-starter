@@ -1,12 +1,12 @@
 package scalan.demo
 
-import scalan.{ScalanDslExp, ScalanDslStd, Scalan}
+import scalan.{ScalanDslExp, ScalanDslStd, Scalan, ScalanDsl}
 
 /**
   * Example code that can be executed both in standard evaluation
   * and staged evaluation contexts.
   */
-trait Example extends Scalan { // abstract context
+trait Example1 extends ScalanDsl { // abstract context
   lazy val x: Rep[Int] = 10
   lazy val y = x + 1
   val plus = { in: Rep[(Int, Int)] =>
@@ -20,10 +20,13 @@ trait Example extends Scalan { // abstract context
   }
 }
 
-class ExampleStd extends ScalanDslStd with Example
+class Example1Std extends ScalanDslStd with Example1 { // standard context
+  val someVal: Rep[Int] = 10
+}
 
-class ExampleExp extends ScalanDslExp with Example {
+class Example1Exp extends ScalanDslExp with Example1 { // staged context
   override val currentPass = new DefaultPass(
     "mypass", Pass.defaultPassConfig.copy(constantPropagation = false))
+  val someVal: Rep[Int] = 10
 }
 

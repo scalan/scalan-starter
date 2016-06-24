@@ -31,20 +31,20 @@ class DemoMmm extends BaseNestedTests {
         k
       }
 
-      val (dmdmA_c, _) = time("Generating C++ kernel") {
-        val k = kstore.createKernel("dmdmA", KernelType.Cpp, dmdmA)
-        k((dmData, dmData))
-        k
-      }
+//      val (dmdmA_c, _) = time("Generating C++ kernel") {
+//        val k = kstore.createKernel("dmdmA", KernelType.Cpp, dmdmA)
+//        k((dmData, dmData))
+//        k
+//      }
 
       val rows = 500
       val cols = rows
 
-      val (a,_) = time( s"""Generating ${rows}x${cols} Array[Array[Double]] ...""") {
+      val (a,_) = time( s"""Generating first ${rows}x${cols} Array[Array[Double]] ...""") {
         genMatr(rows, cols)
       }
 
-      val (bT, _) = time( s"""Generating ${rows} Array[Double] ...""") {
+      val (bT, _) = time( s"""Generating second ${rows}x${cols} Array[Array[Double]] ...""") {
         genMatr(rows, cols)
       }
 
@@ -59,10 +59,10 @@ class DemoMmm extends BaseNestedTests {
       }
 
       val (resS,_) = time(s"Executing Scala kernel") { dmdmA_s((a, bT)) }
-      val (resC,_) = time(s"Executing C++ kernel") { dmdmA_c((a, bT)) }
+//      val (resC,_) = time(s"Executing C++ kernel") { dmdmA_c((a, bT)) }
 
       assertResult(correctRes)(resS)
-      assertResult(correctRes)(resC)
+//      assertResult(correctRes)(resC)
     }
   }
 }
