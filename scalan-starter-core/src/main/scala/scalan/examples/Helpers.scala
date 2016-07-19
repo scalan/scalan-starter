@@ -37,7 +37,7 @@ object Helpers { //scalan: Scalan =>
     val result = block
     val end = System.nanoTime()
     val t = (end - start).toDouble
-    println(s"$name (${(t / 1e6)} ms)")
+    println(s"$name (${Console.BLUE}${(t / 1e6)}${Console.RESET} ms)")
     (result, t)
   }
 
